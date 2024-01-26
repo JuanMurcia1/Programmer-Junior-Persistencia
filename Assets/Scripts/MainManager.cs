@@ -6,14 +6,20 @@ using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
+
+
     public Brick BrickPrefab;
+    private string otherPlayer;
     public int LineCount = 6;
     public Rigidbody Ball;
 
     public Text ScoreText;
+
+    public Text player;
     public GameObject GameOverText;
     
     private bool m_Started = false;
+
     private int m_Points;
     
     private bool m_GameOver = false;
@@ -36,10 +42,16 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        
+   
+        
     }
 
     private void Update()
     {
+        
+         
         if (!m_Started)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -51,16 +63,31 @@ public class MainManager : MonoBehaviour
 
                 Ball.transform.SetParent(null);
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
+                
+                
+
+
+                
             }
+
         }
         else if (m_GameOver)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                if(m_Points>Administrador.Instance.score1){
+                    Administrador.Instance.score1 = m_Points;
+                }
+
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+               
+                
             }
         }
+        
     }
+
 
     void AddPoint(int point)
     {
@@ -72,5 +99,29 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+      
+               
+        if(m_Points < Administrador.Instance.score1 && Administrador.Instance.score1 > 0 ){
+            player.text = "Best Score: " + Administrador.Instance.score1 + " By " + Administrador.Instance.textIngresado;
+        }else{
+            player.text = "Best Score: " + m_Points + " By " + Administrador.Instance.textIngresado;
+
+        }
+                
+                Debug.Log(m_Points);
+                Debug.Log(Administrador.Instance.score1);
+                
     }
+
+    public void ExitGame()
+    {
+        
+        SceneManager.LoadScene(0);
+    }
+
+    
 }
+
+
+
