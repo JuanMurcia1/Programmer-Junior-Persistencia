@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MainManager : MonoBehaviour
 {
@@ -41,10 +44,9 @@ public class MainManager : MonoBehaviour
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
             }
-        }
+        }   
 
-        
-   
+        player.text= Administrador.Instance.bestPlayer;
         
     }
 
@@ -103,9 +105,13 @@ public class MainManager : MonoBehaviour
       
                
         if(m_Points < Administrador.Instance.score1 && Administrador.Instance.score1 > 0 ){
-            player.text = "Best Score: " + Administrador.Instance.score1 + " By " + Administrador.Instance.textIngresado;
+            
+            Administrador.Instance.bestPlayer= "Best Score: " + Administrador.Instance.score1 + " By " + Administrador.Instance.textIngresado;
+            player.text= Administrador.Instance.bestPlayer;
         }else{
-            player.text = "Best Score: " + m_Points + " By " + Administrador.Instance.textIngresado;
+            
+            Administrador.Instance.bestPlayer= "Best Score: " + m_Points + " By " + Administrador.Instance.textIngresado;
+            player.text= Administrador.Instance.bestPlayer;
 
         }
                 
@@ -119,6 +125,29 @@ public class MainManager : MonoBehaviour
         
         SceneManager.LoadScene(0);
     }
+
+    public void Exit()
+    {
+        Administrador.Instance.SaveBestPlayer(); 
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit(); // original code to quit Unity player
+#endif
+    }
+
+    public void SaveStringPlayer()
+{
+    Administrador.Instance.SaveBestPlayer();
+}
+
+public void LoadStringPlayer()
+{
+    Administrador.Instance.LoadBestPlayer();
+    
+}
+
+    
 
     
 }
